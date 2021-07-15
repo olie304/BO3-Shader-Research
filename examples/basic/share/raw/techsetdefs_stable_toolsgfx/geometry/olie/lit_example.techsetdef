@@ -1,0 +1,62 @@
+#include "lit_base_basic"
+
+Globals()
+{
+	category = "Geometry"
+	renderFlags = "lit deferred opaque"
+	availablePrefixes = "mc/ mcs/ wc/"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "build shadowmap depth" ) :  "build shadowmap depth base"
+{}
+
+#if TETRAHEDRON_OMNI_SHADOWS=="1"
+Technique( "build shadowmap depth planes" ) : "build shadowmap depth planes base"
+{}
+#endif
+
+Technique( "build shadowmap depth layered" ) :  "build shadowmap depth layered base"
+{}
+
+Technique( "unlit" )
+{
+	state = "replace + depth"
+	defines = "USE_COLOR_TINT"
+	source = "techsetdef_unlit_simple.hlsl"
+	vs = "vs_generic"
+	ps = "ps_generic"
+}
+
+Technique( "gbuffer" )
+{
+    defines = "BASE_TEXTURES", "USE_COLOR_TINT"
+    state = "gbuffer opaque"
+    // You can set the parameter to be the i/o type, generic is default e.g. VertexShader("vs_generic")
+    vs = VertexShader()
+    {
+        source = "gbuffer_lit_vs_semi-reversed.hlsl"
+    }
+    ps = PixelShader()
+    {
+        // Say you didn't want to use a custom pixel shader, just do `source = "gbuffer_lit.hlsl"` in here
+        source = "gbuffer_lit_ps_semi-reversed.hlsl"
+    }
+}
+
+Technique( "gbuffer motion vector" ) : "gbuffer"
+{
+	defines += "GENERATE_MOTION_VECTOR"
+}
+
+Technique( "debug color texel" )
+{
+	state = "replace + depth"
+	source = "ToolsGfx/debug_texeldensity.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		defines = "DEBUG_COLOR_TEXELS"
+	}
+}
