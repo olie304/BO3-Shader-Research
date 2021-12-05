@@ -1,0 +1,74 @@
+iwmap 4
+"script_startingnumber" 0
+"000_Global" flags  active
+"The Map" flags expanded 
+// entity 0
+{
+guid "{E9A6B942-561B-11EC-AD2E-2CF05D6DBA28}"
+"classname" "worldspawn"
+"lightingquality" "1024"
+"samplescale" "1"
+"skyboxmodel" "skybox_aurora"
+"ssi" "aurora_sky"
+"wsi" "aurora_sky"
+"fsi" "default"
+"gravity" "800"
+"lodbias" "default"
+"lutmaterial" "luts_t7_default"
+"numOmniShadowSlices" "24"
+"numSpotShadowSlices" "64"
+"sky_intensity_factor0" "1"
+"sky_intensity_factor1" "1"
+"state_alias_1" "State 1"
+"state_alias_2" "State 2"
+"state_alias_3" "State 3"
+"state_alias_4" "State 4"
+// brush 0
+ {
+  guid "{CFB31A34-5612-11EC-AD2E-2CF05D6DBA28}"
+  mesh
+  {
+  toolFlags;
+   end_portal_mat
+   lightmap_gray
+   2 2 0 8
+   (
+	v -192 -348.5 2 t 0 -0 -9.375 46.25
+	v -192 -231.5 2 t 0 -1024 -9.375 38.9375
+   )
+   (
+	v -75 -348.5 2 t 1024 -0 -2.0625 46.25
+	v -75 -231.5 2 t 1024 -1024 -2.0625 38.9375
+   )
+  }
+ }
+// brush 1
+ {
+  guid "{CFB31A37-5612-11EC-AD2E-2CF05D6DBA28}"
+  mesh
+  {
+  toolFlags;
+   end_portal_mat
+   lightmap_gray
+   2 2 0 8
+   (
+	v -55 -310 2 t 0 -0 -9.375 41.375
+	v -55 -271 2 t 0 -1024 -9.375 38.9375
+   )
+   (
+	v -16 -310 2 t 1024 -0 -6.9375 41.375
+	v -16 -271 2 t 1024 -1024 -6.9375 38.9375
+   )
+  }
+ }
+// brush 2
+{
+ guid "{B970F652-50A6-11EC-AD2E-2CF05D6DBA28}"
+ ( 25.75 -292.5 12.25 ) ( 3.75 -292.5 12.25 ) ( 3.75 -314.5 12.25 ) end_portal_mat -39 39 -35.25 0.75 0 0 lightmap_gray 16384 16384 153.75 -347.5 0 0
+ ( 3.75 -312.75 51.25 ) ( 3.75 -290.75 51.25 ) ( 25.75 -290.75 51.25 ) end_portal_mat -39 39 -35.25 0.75 0 0 lightmap_gray 16384 16384 153.75 -349.25 0 0
+ ( 3.75 -312.75 50.25 ) ( 25.75 -312.75 50.25 ) ( 25.75 -312.75 29.25 ) end_portal_mat -39 39 -35.25 26.75 0 0 lightmap_gray 16384 16384 153.75 -49.25 0 0
+ ( 42.75 -311.75 50.25 ) ( 42.75 -289.75 50.25 ) ( 42.75 -289.75 29.25 ) end_portal_mat -39 39 -0.75 26.75 0 0 lightmap_gray 16384 16384 350.25 -49.25 0 0
+ ( 20.75 -273.75 50.25 ) ( -1.25 -273.75 50.25 ) ( -1.25 -273.75 29.25 ) end_portal_mat -39 39 -35.25 26.75 0 0 lightmap_gray 16384 16384 148.75 -49.25 0 0
+ ( 3.75 -290.75 50.25 ) ( 3.75 -312.75 50.25 ) ( 3.75 -312.75 29.25 ) end_portal_mat -39 39 -0.75 26.75 0 0 lightmap_gray 16384 16384 349.25 -49.25 0 0
+}
+}

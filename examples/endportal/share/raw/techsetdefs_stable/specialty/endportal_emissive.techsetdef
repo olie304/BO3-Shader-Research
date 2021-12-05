@@ -1,0 +1,299 @@
+#include "lit_base_shaders"
+#include "shadowmap_technique_base"
+
+// This technique set will only work on static brushes and patches! It will break on any kind of model or other special surfaces!
+
+Globals()
+{
+    url = "https://github.com/olie304/BO3-Shader-Research/tree/main/examples/endportal"
+    displayName = "End Portal"
+	category = "Specialty"
+	renderFlags = RenderFlags()
+    {
+        isEmissive = true
+        isOpaque = true
+        castsShadows = false
+        requiresPrepass = true
+        isOccluder = true
+    }
+	availablePrefixes = "mc/ mcs/ wc/"
+}
+
+
+
+// - - - - - - - - - - - Editor Compliance - - - - - - - - - - - - -
+
+#if TOOLSGFX == "1"
+
+Texture( "flickerLookupMap" )
+{
+	image = Image( "i_generic_lookup" )
+    semantic = "revealMap"
+}
+
+Texture( "emissiveMap" )
+{
+	image = Image( "end_portal_static_editor" )
+}
+
+Texture( "colorMap" )
+{
+	image = Image( "end_portal_static_editor" )
+}
+
+float2( "rotateUVs" )
+{
+	x = 0
+	y = 0
+}
+
+float2( "scrollUVs" )
+{
+	x = 0.006
+	y = 0.008
+}
+
+float2( "scaleUVs" )
+{
+	x = 1
+	y = 1
+}
+
+float2( "offsetUVs" )
+{
+	x = 0
+	y = 0
+}
+
+float2( "zoomUVs" )
+{
+	x = 1
+	y = 1
+}
+
+float1( "zoomRate" )
+{
+	x = 0
+}
+
+Bool( "clampU" )
+{
+	value = 0
+}
+
+Bool( "clampV" )
+{
+	value = 0
+}
+
+float2( "flickerSeed" )
+{
+	x = 0
+	y = 0
+}
+
+float1( "flickerSpeed" )
+{
+	x = 0
+}
+
+float2( "flickerRange" )
+{
+	x = 0
+	y = 1
+}
+
+float1( "flickerPower" )
+{
+	x = 0
+}
+
+float1( "minimumOpacity" )
+{
+	x = 1
+}
+
+Color( "emissiveTint1" )
+{
+    value = "1 1 1 1"
+}
+
+float1( "layerDepth" )
+{
+	x = 0.5
+}
+
+#endif
+
+// - - - - - - - - - - - Editor Compliance - - - - - - - - - - - - -
+
+
+uint1( "zFeatherComputeSprites" )
+{
+	x = 0
+}
+
+float1( "hdrScale" )
+{
+	x = <scaleRGB>
+	tweak = Tweak()
+    {
+        category = "Emissive"
+        title = "HDR Scale"
+        sortindex = "20"
+        default = "0.27"
+        range = "0.01", "1.0", "0.01"
+    }
+}
+
+float1( "emissiveFalloffPower" )
+{
+	x = <emissiveFalloff>
+	tweak = Tweak( "Emissive", "Falloff", "30" )
+}
+
+Bool( "relativeHDR" )
+{
+	value = <emissiveIncompetence>
+	tweak = Tweak()
+    {
+        category = "Emissive"
+        title = "Use gameplay intensity."
+        sortindex = "440"
+        default = "1"
+    }
+}
+
+Bool( "invertFalloff" )
+{
+	value = <invertFalloff>
+	tweak = Tweak( "Emissive", "Invert falloff (brighter edges).", "540" )
+}
+
+
+
+// -------- Custom Constants --------
+Sampler( "colorSampler" )
+{
+	tile = "tile both*"
+	filter = "nearest (mip none)"
+}
+
+float1( "portalAnimSpeed" )
+{
+    x = <cg09_w>
+    tweak = Tweak()
+    {
+        category = "Custom"
+        title = "Animation Speed Multiplier"
+        sortindex = "21"
+        default = "1.0"
+        range = "0.001", "100.0", "0.01"
+    }
+}
+
+Texture( "endSky" )
+{
+    ref = true
+	image = Image( <colorMap14, "end_sky2x"> )
+	semantic = "diffuseMap"
+	usage = "diffuse map"
+	tweak = Tweak()
+	{
+		category  = "Color"
+		title     = "Sky Intensity Map"
+		sortindex = "10"
+        default = "end_sky2x"
+	}
+}
+
+Texture( "endPortal" )
+{
+    ref = true
+	image = Image( <colorMap15, "end_portal"> )
+	semantic = "diffuseMap"
+	usage = "diffuse map"
+	tweak = Tweak()
+	{
+		category  = "Color"
+		title     = "Void Particle Intensity Map"
+		sortindex = "11"
+        default = "end_portal"
+	}
+}
+// -------- Custom Constants --------
+
+
+
+Technique( "depth prepass" )
+{
+	state = "depthPrepass"
+	source = "techsetdef_prepass.hlsl"
+	vs = "vs_generic"
+	ps = "ps_generic"
+}
+
+Technique( "depth prepass motion vector" ) : "depth prepass"
+{
+	defines += "GENERATE_MOTION_VECTOR"
+}
+
+Technique( "build shadowmap depth" ) :  "build shadowmap depth base"
+{}
+
+#if TETRAHEDRON_OMNI_SHADOWS=="1"
+Technique( "build shadowmap depth planes" ) : "build shadowmap depth planes base"
+{}
+#endif
+
+Technique( "build shadowmap depth layered" ) :  "build shadowmap depth layered base"
+{}
+
+Technique( "unlit" )
+{
+	state	= "blend + depth"
+    defines = "USE_EMISSIVE"
+	source = "techsetdef_unlit_simple.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+    {
+        colorMap = Texture()
+        {
+            image = Image( "end_portal_static_editor" )
+        }
+    }
+}
+Technique( "lit" )
+{
+	state	= "replace + depth"
+	defines = "BASE_TEXTURES", "USE_COLOR_TINT", "USE_SCROLL_ROTATE_UVS", "USE_EMISSIVE_FLICKER"
+    vs = VertexShader() : "vs_generic"
+	{
+		source = "specialty/emissive_objective.hlsl"
+    }
+	ps = PixelShader() : "ps_generic"
+	{
+#if TOOLSGFX == "1"
+		source = "specialty/emissive_objective.hlsl"
+#else
+		source = "endportal_ps.hlsl"
+#endif
+    }
+}
+
+Technique( "oit" ) : "lit"
+{
+	state = "fallback + depth + rez"
+	defines += "USE_OIT"
+}
+
+Technique( "debug color texel" )
+{
+	state	= "blend + depth"
+	source = "ToolsGfx/debug_texeldensity.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		defines = "DEBUG_COLOR_TEXELS"
+	}
+}
