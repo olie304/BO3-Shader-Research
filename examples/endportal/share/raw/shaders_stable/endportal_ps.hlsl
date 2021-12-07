@@ -301,39 +301,39 @@ void ps_main(
         float2 uv = iuv;
         float adjDepth = j + 1;
         //float colorCoeff = 1.0F / ((16 - j) + 1.0F);  // Real Colors (Dark and boring)
-        float colorCoeff = 2.0 f / (18 - j); // Better than real colors (Epic and based)
+        float colorCoeff = 2.0f / (18 - j); // Better than real colors (Epic and based)
 
         uv += r1.xy * ((16 - j) - 0.75); // Transforms each layer in Tangent space for parallax effect
-        uv.xy -= 0.5 f;
-        float s = sin(radians((adjDepth * adjDepth * 4321.0 f + adjDepth * 9.0 f) * 2.0 f));
-        float c = cos(radians((adjDepth * adjDepth * 4321.0 f + adjDepth * 9.0 f) * 2.0 f));
+        uv.xy -= 0.5f;
+        float s = sin(radians((adjDepth * adjDepth * 4321.0f + adjDepth * 9.0f) * 2.0f));
+        float c = cos(radians((adjDepth * adjDepth * 4321.0f + adjDepth * 9.0f) * 2.0f));
         float2x2 rotationMatrix = float2x2(c, -s, s, c);
-        rotationMatrix *= 0.5 f;
-        rotationMatrix += 0.5 f;
+        rotationMatrix *= 0.5f;
+        rotationMatrix += 0.5f;
         rotationMatrix = rotationMatrix * 2 - 1;
         uv.xy = mul(uv.xy, rotationMatrix);
-        uv.xy += 0.5 f;
+        uv.xy += 0.5f;
 
         uv.xy *= 4.0;
-        uv.x -= 17.0 f / adjDepth;
-        float speed = portalAnimSpeed == 0 ? 1 : portalAnimSpeed;
-        uv.y += (2.0 f + adjDepth / 1.5 f) * (gameTime.w % (80.0 f * (1.0 f / speed)) / (80.0 f * (1.0 f / speed)));
+        uv.x -= 17.0f / adjDepth;
+        float speed = (portalAnimSpeed == 0 ? 1 : portalAnimSpeed) * 0.1;
+        uv.y += (2.0f + adjDepth / 1.5f) * (gameTime.w % (80.0f * (1.0f / speed)) / (80.0f * (1.0f / speed)));
 
         float4 tempCol = float4(0, 0, 0, 0);
         if (j == 0) {
-            colorCoeff = 0.15 f;
-            tempCol = endSky.Sample(colorSampler, uv * 0.125 f);
+            colorCoeff = 0.15f;
+            tempCol = endSky.Sample(colorSampler, uv * 0.125f);
         }
         if (j >= 1) {
             if (j == 1) {
-                tempCol = endPortal.Sample(colorSampler, uv * 0.5 f) * (1.0 f - color.w);
+                tempCol = endPortal.Sample(colorSampler, uv * 0.5f) * (1.0f - color.w);
             } else {
-                tempCol = endPortal.Sample(colorSampler, uv * 0.0625 f);
+                tempCol = endPortal.Sample(colorSampler, uv * 0.0625f);
             }
         }
-        tempCol.x *= (GetNextFloat() * 0.5 f + 0.1 f) * colorCoeff;
-        tempCol.y *= (GetNextFloat() * 0.5 f + 0.4 f) * colorCoeff;
-        tempCol.z *= (GetNextFloat() * 0.5 f + 0.5 f) * colorCoeff;
+        tempCol.x *= (GetNextFloat() * 0.5f + 0.1f) * colorCoeff;
+        tempCol.y *= (GetNextFloat() * 0.5f + 0.4f) * colorCoeff;
+        tempCol.z *= (GetNextFloat() * 0.5f + 0.5f) * colorCoeff;
         color += tempCol;
     }
 

@@ -7,8 +7,8 @@ Globals()
 {
     url = "https://github.com/olie304/BO3-Shader-Research/tree/main/examples/endportal"
     displayName = "End Portal"
-	category = "Specialty"
-	renderFlags = RenderFlags()
+    category = "Specialty"
+    renderFlags = RenderFlags()
     {
         isEmissive = true
         isOpaque = true
@@ -16,7 +16,7 @@ Globals()
         requiresPrepass = true
         isOccluder = true
     }
-	availablePrefixes = "mc/ mcs/ wc/"
+    availablePrefixes = "mc/ mcs/ wc/"
 }
 
 
@@ -27,90 +27,90 @@ Globals()
 
 Texture( "flickerLookupMap" )
 {
-	image = Image( "i_generic_lookup" )
+    image = Image( "i_generic_lookup" )
     semantic = "revealMap"
 }
 
 Texture( "emissiveMap" )
 {
-	image = Image( "end_portal_static_editor" )
+    image = Image( "end_portal_static_editor" )
 }
 
 Texture( "colorMap" )
 {
-	image = Image( "end_portal_static_editor" )
+    image = Image( "end_portal_static_editor" )
 }
 
 float2( "rotateUVs" )
 {
-	x = 0
-	y = 0
+    x = 0
+    y = 0
 }
 
 float2( "scrollUVs" )
 {
-	x = 0.006
-	y = 0.008
+    x = 0.006
+    y = 0.008
 }
 
 float2( "scaleUVs" )
 {
-	x = 1
-	y = 1
+    x = 1
+    y = 1
 }
 
 float2( "offsetUVs" )
 {
-	x = 0
-	y = 0
+    x = 0
+    y = 0
 }
 
 float2( "zoomUVs" )
 {
-	x = 1
-	y = 1
+    x = 1
+    y = 1
 }
 
 float1( "zoomRate" )
 {
-	x = 0
+    x = 0
 }
 
 Bool( "clampU" )
 {
-	value = 0
+    value = 0
 }
 
 Bool( "clampV" )
 {
-	value = 0
+    value = 0
 }
 
 float2( "flickerSeed" )
 {
-	x = 0
-	y = 0
+    x = 0
+    y = 0
 }
 
 float1( "flickerSpeed" )
 {
-	x = 0
+    x = 0
 }
 
 float2( "flickerRange" )
 {
-	x = 0
-	y = 1
+    x = 0
+    y = 1
 }
 
 float1( "flickerPower" )
 {
-	x = 0
+    x = 0
 }
 
 float1( "minimumOpacity" )
 {
-	x = 1
+    x = 1
 }
 
 Color( "emissiveTint1" )
@@ -120,7 +120,7 @@ Color( "emissiveTint1" )
 
 float1( "layerDepth" )
 {
-	x = 0.5
+    x = 0.5
 }
 
 #endif
@@ -130,13 +130,13 @@ float1( "layerDepth" )
 
 uint1( "zFeatherComputeSprites" )
 {
-	x = 0
+    x = 0
 }
 
 float1( "hdrScale" )
 {
-	x = <scaleRGB>
-	tweak = Tweak()
+    x = <scaleRGB>
+    tweak = Tweak()
     {
         category = "Emissive"
         title = "HDR Scale"
@@ -148,14 +148,14 @@ float1( "hdrScale" )
 
 float1( "emissiveFalloffPower" )
 {
-	x = <emissiveFalloff>
-	tweak = Tweak( "Emissive", "Falloff", "30" )
+    x = <emissiveFalloff>
+    tweak = Tweak( "Emissive", "Falloff", "30" )
 }
 
 Bool( "relativeHDR" )
 {
-	value = <emissiveIncompetence>
-	tweak = Tweak()
+    value = <emissiveIncompetence>
+    tweak = Tweak()
     {
         category = "Emissive"
         title = "Use gameplay intensity."
@@ -166,8 +166,8 @@ Bool( "relativeHDR" )
 
 Bool( "invertFalloff" )
 {
-	value = <invertFalloff>
-	tweak = Tweak( "Emissive", "Invert falloff (brighter edges).", "540" )
+    value = <invertFalloff>
+    tweak = Tweak( "Emissive", "Invert falloff (brighter edges).", "540" )
 }
 
 
@@ -175,8 +175,8 @@ Bool( "invertFalloff" )
 // -------- Custom Constants --------
 Sampler( "colorSampler" )
 {
-	tile = "tile both*"
-	filter = "nearest (mip none)"
+    tile = "tile both*"
+    filter = "nearest (mip none)"
 }
 
 float1( "portalAnimSpeed" )
@@ -195,31 +195,31 @@ float1( "portalAnimSpeed" )
 Texture( "endSky" )
 {
     ref = true
-	image = Image( <colorMap14, "end_sky2x"> )
-	semantic = "diffuseMap"
-	usage = "diffuse map"
-	tweak = Tweak()
-	{
-		category  = "Color"
-		title     = "Sky Intensity Map"
-		sortindex = "10"
+    image = Image( <colorMap14, "end_sky2x"> )
+    semantic = "diffuseMap"
+    usage = "diffuse map"
+    tweak = Tweak()
+    {
+        category  = "Color"
+        title     = "Sky Intensity Map"
+        sortindex = "10"
         default = "end_sky2x"
-	}
+    }
 }
 
 Texture( "endPortal" )
 {
     ref = true
-	image = Image( <colorMap15, "end_portal"> )
-	semantic = "diffuseMap"
-	usage = "diffuse map"
-	tweak = Tweak()
-	{
-		category  = "Color"
-		title     = "Void Particle Intensity Map"
-		sortindex = "11"
+    image = Image( <colorMap15, "end_portal"> )
+    semantic = "diffuseMap"
+    usage = "diffuse map"
+    tweak = Tweak()
+    {
+        category  = "Color"
+        title     = "Void Particle Intensity Map"
+        sortindex = "11"
         default = "end_portal"
-	}
+    }
 }
 // -------- Custom Constants --------
 
@@ -227,15 +227,15 @@ Texture( "endPortal" )
 
 Technique( "depth prepass" )
 {
-	state = "depthPrepass"
-	source = "techsetdef_prepass.hlsl"
-	vs = "vs_generic"
-	ps = "ps_generic"
+    state = "depthPrepass"
+    source = "techsetdef_prepass.hlsl"
+    vs = "vs_generic"
+    ps = "ps_generic"
 }
 
 Technique( "depth prepass motion vector" ) : "depth prepass"
 {
-	defines += "GENERATE_MOTION_VECTOR"
+    defines += "GENERATE_MOTION_VECTOR"
 }
 
 Technique( "build shadowmap depth" ) :  "build shadowmap depth base"
@@ -251,11 +251,11 @@ Technique( "build shadowmap depth layered" ) :  "build shadowmap depth layered b
 
 Technique( "unlit" )
 {
-	state	= "blend + depth"
+    state    = "blend + depth"
     defines = "USE_EMISSIVE"
-	source = "techsetdef_unlit_simple.hlsl"
-	vs = "vs_generic"
-	ps = PixelShader() : "ps_generic"
+    source = "techsetdef_unlit_simple.hlsl"
+    vs = "vs_generic"
+    ps = PixelShader() : "ps_generic"
     {
         colorMap = Texture()
         {
@@ -265,35 +265,35 @@ Technique( "unlit" )
 }
 Technique( "lit" )
 {
-	state	= "replace + depth"
-	defines = "BASE_TEXTURES", "USE_COLOR_TINT", "USE_SCROLL_ROTATE_UVS", "USE_EMISSIVE_FLICKER"
+    state    = "replace + depth"
+    defines = "BASE_TEXTURES", "USE_COLOR_TINT", "USE_SCROLL_ROTATE_UVS", "USE_EMISSIVE_FLICKER"
     vs = VertexShader() : "vs_generic"
-	{
-		source = "specialty/emissive_objective.hlsl"
+    {
+        source = "specialty/emissive_objective.hlsl"
     }
-	ps = PixelShader() : "ps_generic"
-	{
+    ps = PixelShader() : "ps_generic"
+    {
 #if TOOLSGFX == "1"
-		source = "specialty/emissive_objective.hlsl"
+        source = "specialty/emissive_objective.hlsl"
 #else
-		source = "endportal_ps.hlsl"
+        source = "endportal_ps.hlsl"
 #endif
     }
 }
 
 Technique( "oit" ) : "lit"
 {
-	state = "fallback + depth + rez"
-	defines += "USE_OIT"
+    state = "fallback + depth + rez"
+    defines += "USE_OIT"
 }
 
 Technique( "debug color texel" )
 {
-	state	= "blend + depth"
-	source = "ToolsGfx/debug_texeldensity.hlsl"
-	vs = "vs_generic"
-	ps = PixelShader() : "ps_generic"
-	{
-		defines = "DEBUG_COLOR_TEXELS"
-	}
+    state  = "blend + depth"
+    source = "ToolsGfx/debug_texeldensity.hlsl"
+    vs = "vs_generic"
+    ps = PixelShader() : "ps_generic"
+    {
+        defines = "DEBUG_COLOR_TEXELS"
+    }
 }
