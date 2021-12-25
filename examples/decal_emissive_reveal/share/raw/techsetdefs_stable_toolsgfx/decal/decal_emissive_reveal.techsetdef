@@ -1,0 +1,178 @@
+#include "lit_base_shaders"
+#include "lit_decal_base.inc"
+#include "emissive_base"
+#include "scroll_base"
+#include "flicker_base"
+#include "reveal_base"
+
+Globals()
+{
+    url = "https://github.com/olie304/BO3-Shader-Research/tree/main/examples/decal_emissive_reveal"
+	category = "Decal"
+	renderFlags = RenderFlags()
+    {
+        #if MTL_TYPE_VOL_DECAL == "1"
+            isVolDecal = true
+        #endif
+        isEmissive = true
+        isDecal = true
+        noBspCollision = true
+        useRevealMap = true
+    }
+	availablePrefixes = "mc/ mcs/ wc/ / vd/"
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Sampler( "colorSampler" )
+{
+	tile = <tileColor>
+	filter = <filterColor>
+	tweak = Tweak()
+	{
+		category  = "Emissive"
+		sortindex = "18" // leave some indices to have other color maps (need 2 indices - tile + filter)
+	}
+}
+
+Texture( "emissiveMask" )
+{
+	image = Image( <transRevealMap, $white_reveal> )
+	semantic = "revealMap"
+	tweak = Tweak()
+	{
+		category  = "Emissive Mask"
+		title     = "Mask Map"
+		sortindex = "10"
+	}
+}
+
+Texture( "distortionMap" )
+{
+	image = Image( <normalMap, $normal> )
+	semantic = "normalMap"
+	tweak = Tweak()
+	{
+		category  = "Distortion"
+		title     = "Normal Map"
+		sortindex = "10"
+	}
+}
+
+// FOR THE OTHER PASSES
+Texture( "colorMap" ) : "emissiveMap"
+{ }
+Color( "colorTint" ) : "emissiveTint1"
+{ }
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+float2( "rotateUVs" ).tweak = Tweak( "Mask Motion", "Rotation, Spin Rate", "10" )
+float2( "scrollUVs" ).tweak = Tweak( "Mask Motion", "Scroll Rate", "20" )
+float2( "scaleUVs" ).tweak = Tweak( "Mask Motion", "Scale", "30" )
+float2( "offsetUVs" ).tweak = Tweak( "Mask Motion", "Offset", "40" )
+float2( "zoomUVs" ).tweak = Tweak( "Mask Motion", "Zoom (Min, Max)", "50" )
+float1( "zoomRate" ).tweak = Tweak( "Mask Motion", "Zoom Rate", "60" )
+float1( "layerDepth" ).tweak = Tweak( "Mask Motion", "Perceived Depth", "70" )
+Bool( "clampU" ).tweak = Tweak( "Mask Motion", "Clamp U", "80" )
+Bool( "clampV" ).tweak = Tweak( "Mask Motion", "Clamp V", "90" )
+
+float1( "distortionAmount" )
+{
+	x = <cg03_z>
+	tweak = Tweak()
+	{
+		category	= "Distortion"
+		title		= "Amount"
+		sortindex	= "20"
+		default		= "0.0"
+		range		= "0.0", "1024.0", "0.01"
+	}
+}
+
+float2( "distortionScrollUVs" )
+{
+	x = <cg04_y>
+	y = <cg04_z>
+	tweak = Tweak()
+	{
+		category	= "Distortion"
+		title		= "Scroll (U, V)"
+		sortindex	= "40"
+		default		= "0.0"
+		range		= "-1024.0", "1024.0", "0.01"
+	}
+}
+
+float2( "distortionScaleUVs" )
+{
+	x = <cg04_w>
+	y = <cg05_x>
+	tweak = Tweak()
+	{
+		category	= "Distortion"
+		title		= "Scale (U, V)"
+		sortindex	= "50"
+		default		= "1.0"
+		range		= "0.001", "128.0", "0.01"
+	}
+}
+
+float2( "emissiveScaleUVs" )
+{
+	x = <cg05_y>
+	y = <cg05_z>
+	tweak = Tweak()
+	{
+		category	= "Emissive"
+		title		= "Scale (U, V)"
+		sortindex	= "50"
+		default		= "1.0"
+		range		= "0.001", "128.0", "0.01"
+	}
+}
+
+float2( "emissiveScrollUVs" )
+{
+	x = <cg05_w>
+	y = <cg06_x>
+	tweak = Tweak()
+	{
+		category	= "Emissive"
+		title		= "Scroll (U, V)"
+		sortindex	= "60"
+		default		= "0.0"
+		range		= "-1024.0", "1024.0", "0.01"
+	}
+}
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Technique( "unlit" ) : "base lit decal unlit"
+{
+	defines = "USE_COLOR_TINT"
+}
+
+Technique( "lit" )
+{
+	state = "add + depth + decal"
+	source = "decal_emissive_mask.hlsl"
+	
+	defines = "USE_COLOR_TINT", "USE_SCROLL_ROTATE_UVS", "USE_EMISSIVE_FLICKER"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+    {
+        source = "decal_emissive_reveal_ps.hlsl"
+    }
+}
+
+Technique( "debug color texel" )
+{
+	state = "blend + depth + decal"
+	source = "ToolsGfx/debug_texeldensity.hlsl"
+	vs = "vs_generic"
+	ps = PixelShader() : "ps_generic"
+	{
+		defines = "DEBUG_COLOR_TEXELS"
+	}
+}
